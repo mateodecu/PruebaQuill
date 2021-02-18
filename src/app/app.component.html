@@ -1,14 +1,42 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
+<div style="text-align: center">
   <h1>
     {{ title }}
   </h1>
 </div>
 
-<hr>
+<hr />
+<ul>
+  <li>En Primer lugar definir un texto en el primer editor. Luego convertirlo a HTML con el boton CONVERTIR</li>
+  <li>Una vez definido el texto mediante el primer editor, se puede setear el texto en el segundo editor con el boton SETEAR TEXTO</li>
+</ul>
+<hr />
 
 <div class="quill-editor-container">
-  <quill-editor id="description" formControlName="body" [modules]="quillConfig"
-    (onEditorChanged)="changedEditor($event)">
+  <quill-editor
+    id="description"
+    formControlName="body"
+    [modules]="quillConfig"
+    (onEditorChanged)="changedEditor($event)"
+  >
   </quill-editor>
 </div>
+
+<button (click)="convert()">CONVERT</button>
+
+<br><hr><br>
+<div>{{ toSave }}</div>
+<br><hr><br>
+
+<div class="quill-editor-container">
+  <quill-editor
+  id="description2"
+  formControlName="body"
+  [modules]="quillConfig"
+  (onEditorChanged)="changedEditor($event)"
+  >
+</quill-editor>
+</div>
+
+<br><hr><br>
+<button (click)="boton()">SETEAR TEXTO</button>
