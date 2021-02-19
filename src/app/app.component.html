@@ -12,31 +12,54 @@
 </ul>
 <hr />
 
+<h4>Asunto</h4>
 <div class="quill-editor-container">
   <quill-editor
-    id="description"
-    formControlName="body"
-    [modules]="quillConfig"
-    (onEditorChanged)="changedEditor($event)"
-  >
-  </quill-editor>
-</div>
-
-<button (click)="convert()">CONVERT</button>
-
-<br><hr><br>
-<div>{{ toSave }}</div>
-<br><hr><br>
-
-<div class="quill-editor-container">
-  <quill-editor
-  id="description2"
-  formControlName="body"
-  [modules]="quillConfig"
-  (onEditorChanged)="changedEditor($event)"
+  id="subject1"
+  formControlName="subject"
+  [modules]="quillSubjectConfig"
+  (onEditorChanged)="changedEditorSubject($event)"
   >
 </quill-editor>
 </div>
+<h4>Cuerpo</h4>
+<div class="quill-editor-container">
+  <quill-editor
+  id="body1"
+  formControlName="body"
+  [modules]="quillBodyConfig"
+  (onEditorChanged)="changedEditorBody($event)"
+  >
+</quill-editor>
+</div>
+<br>
+<button (click)="convert()">CONVERTIR</button>
 
-<br><hr><br>
+<hr>
+<h4>Asunto</h4>
+<textarea style="width: 100%;">{{ subjectToSave }}</textarea>
+<h4>Cuerpo</h4>
+<textarea style="width: 100%;">{{ bodyToSave }}</textarea>
+<hr>
+
+<h4>Asunto</h4>
+<div class="quill-editor-container">
+  <quill-editor
+    id="subject2"
+    formControlName="subject"
+    [modules]="quillSubjectConfig"
+    (onEditorChanged)="changedEditorSubject($event)"
+  >
+  </quill-editor>
+</div>
+<h4>Cuerpo</h4>
+<div class="quill-editor-container">
+  <quill-editor
+  id="body2"
+  formControlName="body"
+  [modules]="quillBodyConfig"
+  >
+</quill-editor>
+</div>
+<br>
 <button (click)="boton()">SETEAR TEXTO</button>

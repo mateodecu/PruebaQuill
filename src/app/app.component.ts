@@ -22,13 +22,13 @@ const hashValues = [
 })
 export class AppComponent {
   title = "Prueba Quill";
-  toSave = null;
+  bodyToSave = null;
+  subjectToSave = null;
   content = null;
-  ops = null;
+  opsSubject = null;
+  opsBody = null;
 
-  variable = "Hola a todosss"
-
-  public quillConfig = {
+  public quillBodyConfig = {
     toolbar: {
       container: [
         ["bold", "italic", "underline", "strike"],
@@ -66,30 +66,88 @@ export class AppComponent {
         }
       },
     },
-  };
+  }
 
-  changedEditor(event: EditorChangeContent | EditorChangeSelection) {
+  public quillSubjectConfig = {
+    toolbar: false,
+    mention: {
+      allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+      mentionDenotationChars: ["@", "#"],
+      source: function (searchTerm, renderList, mentionChar) {
+        let values;
+
+        if (mentionChar === "@") {
+          values = atValues;
+        } else {
+          values = hashValues;
+        }
+
+        if (searchTerm.length === 0) {
+          renderList(values, searchTerm);
+        } else {
+          const matches = [];
+          for (let i = 0; i < values.length; i++)
+            if (
+              ~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())
+            )
+              matches.push(values[i]);
+          renderList(matches, searchTerm);
+        }
+      },
+    },
+  }
+
+  changedEditorBody(event: EditorChangeContent | EditorChangeSelection) {
     const contents = event.editor.getContents();
-    this.ops = contents;
+    this.opsBody = contents;
+  }
+
+  changedEditorSubject(event: EditorChangeContent | EditorChangeSelection) {
+    const contents = event.editor.getContents();
+    this.opsSubject = contents;
   }
 
   convert() {
-    var cfg = {};
-    var converter = new QuillDeltaToHtmlConverter(this.ops.ops, cfg);
-    converter.renderCustomWith((customOp) => {
+    let cfg = {};
+    let html
+
+    let converterBody = new QuillDeltaToHtmlConverter(this.opsBody.ops, cfg);
+    converterBody.renderCustomWith((customOp) => {
       if (customOp.insert.type === "mention") {
         const mention = customOp.insert.value;
         return `${mention.id}`;
       }
     });
-    var html = converter.convert();
-    this.toSave = html;
+    html = converterBody.convert();
+    this.bodyToSave = html;
+
+    let converterSubject = new QuillDeltaToHtmlConverter(this.opsSubject.ops, cfg);
+    converterSubject.renderCustomWith((customOp) => {
+      if (customOp.insert.type === "mention") {
+        const mention = customOp.insert.value;
+        return `${mention.id}`;
+      }
+    });
+    html = converterSubject.convert();
+    this.subjectToSave = html;
+    // console.log(this.bodyToSave);
+    // console.log(this.subjectToSave);
+    
   }
 
   boton() {
-    let string = this.toSave
-    atValues.forEach((valor) => string = string.replace(RegExp(valor.id, "g"), valor.blotHTML))
-    string = string.replace(RegExp('<br/>', "g"), '</p><p>')
-    document.getElementById("description2").children[1].children[0].innerHTML = string
+    let stringBody = this.bodyToSave
+    let stringsubject = this.subjectToSave
+
+    atValues.forEach((valor) => stringBody = stringBody.replace(RegExp(valor.id, "g"), valor.blotHTML))
+    stringBody = stringBody.replace(RegExp('<br/>', "g"), '</p><p>')
+    document.getElementById("body2").children[1].children[0].innerHTML = stringBody
+
+    atValues.forEach((valor) => stringsubject = stringsubject.replace(RegExp(valor.id, "g"), valor.blotHTML))
+    stringsubject = stringsubject.replace(RegExp('<br/>', "g"), '</p><p>')
+    console.log(document.getElementById("subject2"));
+    console.log(document.getElementById("body2"));
+    
+    document.getElementById("subject2").children[0].children[0].innerHTML = stringsubject
   }
 }
